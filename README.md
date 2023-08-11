@@ -38,7 +38,8 @@ the line at the equals sign and taking a key and value.
 ## Parameter File
 
 Here we will go through an example parameter file, which can 
-be found as `params/params_23m041_sband.txt`.
+be found as `params/params_23m041_sband.txt`.  We will first 
+provide a section of the parameter file and then explain it.
 
     ##########################
     ###  INPUT VRAD FILES  ###
@@ -64,7 +65,24 @@ be found as `params/params_23m041_sband.txt`.
     
     # Time resolution (in us) of singlepulse file
     sp_dt_us = 10.24
-    
+   
+ 
+In the first part, you need to specify where the raw data 
+(`.vrad`) files are using `vrad_dir`.  The `vrad_base` parameter 
+is the base name of the `.vrad` files.  Using this basename and 
+the frequency band (provided later), the script will glob on 
+the base name in the vrad directory.  
+
+You also need to give the names of files providing meta data info 
+and the arrival time of the burst candidates.  The `inf_file` is 
+either a PRESTO `.inf` file or a scan table file.  The `sp_file` is 
+the PRESTO singlepulse file.  These files both need to be in the output 
+directory (specified later).  The input single pulse file can 
+be filtered with a minimum SNR cutoff (`sp_snr_min`) and by 
+removing duplicates found within `sp_match_fac` times the width 
+of a candidate.  Finally, the time resolution used for the single 
+pulse search is needed (`sp_dt_us`) to convert pulse widths in bins 
+to seconds.  The time resolution should be specified here in microseconds. 
     
     
     
