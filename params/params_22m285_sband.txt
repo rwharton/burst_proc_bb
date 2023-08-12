@@ -1,0 +1,131 @@
+############################################################
+##           PARAMETER FILE FOR FRB_PROCESS.PY            ##
+##                                                        ##
+##  Note that this is NOT imported as a module, but is    ##
+##  instead parsed as a text file.  That means that you   ##
+##  cannot set parameters by referencing others in this   ##
+##  file (e.g., name = freq + '_100').                    ##
+############################################################
+
+##########################
+###  INPUT VRAD FILES  ###
+########################## 
+
+# Directory containing the vrad files
+vrad_dir = "/raw/22m295"
+
+# vrad base 
+vrad_base = "22-295"
+
+# Names of info / sp time files
+#  -->  Place these in output directory
+inf_file = "scan.table.22m295"
+sp_file  = "sp_list_merged.singlepulse"
+
+# Filter sp cand file to remove duplicates?
+# Can also set SNR threshold and sp_match_fac, 
+# which grows the min separation by which cands 
+# are said to be matches (1.0 means just the widths)
+sp_snr_min   = 10
+sp_match_fac = 1.25
+
+# Time resolution (in us) of singlepulse file 
+sp_dt_us = 10.24
+
+
+############################
+###  OUTPUT DIRECTORIES  ###
+############################
+
+# Output directory
+outdir = "/data/frb_pipe/output"
+
+# Output subdirectories (shouldn't need to change)
+cs_dir = "cs"
+dada_dir = "dada"
+fil_dir = "fil"
+png_dir = "png"
+vdr_dir = "vdr"
+
+
+######################
+###  STEPS TO RUN  ###
+######################
+
+# Use (0 or False) and (1 or True) to 
+# set which steps to run
+
+sp_filter   = 1
+vrad_to_cs  = 1
+cs_to_fil   = 1
+combine_pol = 1
+plot_fil    = 1
+plot_scint  = 1
+
+# max number of processes to run at 
+# once with parallel processing
+nproc = 8
+
+
+######################
+###   VRAD -> CS   ### 
+######################
+
+freq_band = "s" # set to x or s 
+source = "m81" 
+telescope = "robledo" 
+data_amount = 3 # in seconds
+
+
+#####################
+###   CS -> FIL   ### 
+#####################
+
+cs_base = "s" # set to x or s if you want same files to be converted
+dm = 219.46
+nchans = [1000]
+
+
+##############################
+###   ZAP + COMBINE POLS   ### 
+##############################
+
+lcp_base = "slcp"
+rcp_base = "srcp"
+comb_base = "sbnd"
+ez = 0.10  # edge zap
+dthresh = 10.0 # Fractional diff threshold
+nwin = 5 # window size
+
+
+######################
+###   PLOT BURST   ### 
+######################
+
+# don't change offset file
+offset_file = "offset_times.txt"
+fil_base = "s" # set to x or s if you want same files to be converted
+tavg = 100  # average this many bins for plotting
+tdur = 0.2  # grab this much data for plot
+
+
+###########################
+###   DM OPTIMIZATION   ### 
+###########################
+
+# Search over trial DMs to find max snr
+# probably not that useful
+
+dm_opt = False   # run optimization?
+dm_lo = 0
+dm_hi = 400
+dm_step = 20
+dm_dir = "dm"
+
+
+####################
+###   CLEAN UP   ### 
+####################
+
+# Cleanup (remove dada and vdr files)
+cleanup = True
