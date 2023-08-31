@@ -78,6 +78,8 @@ freq_dat = 'xband-1'
 freq_sp  = 'sband-1'
 
 source = "J1810-197" 
+scan   = 1
+tskip  = 0
 telescope = "robledo" 
 data_amount = 3 # in seconds
 
