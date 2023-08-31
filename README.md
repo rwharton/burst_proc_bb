@@ -139,6 +139,8 @@ to run in parallel.
     freq_sp  = 'sband-1'
     
     source = "J1810-197"
+    scan   = 1
+    tskip  = 0
     telescope = "robledo"
     data_amount = 3 # in seconds
 
@@ -147,6 +149,19 @@ data format (vdr) to a format readable by SIGPROC and other
 pulsar software (cs).  The `source` and `telescope` specify 
 data about the observation and `data_amount` specifies how much 
 data should be read around the burst (needs to be integer second).
+
+The `scan` parameter gives the scan number of the scan we want to 
+process.  This is only required when using the scan table.  The 
+scan number can be found in the last column of this file.  If 
+`scan = -1` the the first line will be used regardless of scan number. 
+Otherwise it will read each line and check to make sure the scan number 
+is the desired one.  
+
+The `tskip` parameter gives the integer number of seconds to offset 
+from the specified start time in the scan table.  This can be useful 
+if the telescope was not actually on source or if you have split the 
+scan up into smaller subsets for processing with single pulse search 
+(for example).  
 
 The first two parameters (`freq_dat` and `freq_sp`) give the frequency 
 setup for the data we are processing (`freq_dat`) and the data that 
