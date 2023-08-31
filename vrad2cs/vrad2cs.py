@@ -15,7 +15,7 @@ import freq_setups as fs
 cur_dir = os.path.realpath(__file__)
 srcdir  = cur_dir.rsplit('/', 1)[0]
 
-def extract_start_time(inf_file):
+def extract_start_time_orig(inf_file):
     """
     Given inf_file/scan_table, find MJD time and return it 
     in YY/Day_HH:MM:SS format
@@ -64,6 +64,75 @@ def extract_start_time(inf_file):
         output_format = "%y/%j_%H:%M:%S"
         formatted_time = dt.strftime(output_format)
         return t, formatted_time
+
+
+def extract_start_time(inf_file, tskip=0, scan=-1):
+    """
+    Given inf_file/scan_table, find MJD time and return it 
+    in YY/Day_HH:MM:SS format
+    """
+    output_format = "%y/%j_%H:%M:%S"
+
+    # Get datetime object of start time 
+    if "scan.table" in inf_file:
+        scan_found = 0
+        # Open the scan table file
+        with open(inf_file, 'r') as sfile:
+            for line in sfile:
+                if line[0] in ["#", "\n"]:
+                    continue
+                else: pass
+
+                cols = line.split()
+                snum = int(cols[7])
+
+                if (scan < 0) or (scan > 0 and snum == scan):
+                    scan_found = 1
+                    break
+                else:
+                    pass
+
+        if not scan_found:
+            print("SCAN %d NOT FOUND IN SCAN TABLE" %scan)
+            return 
+        else: pass
+
+        date = cols[3] 
+        time = cols[4] + cols[5] + cols[6] 
+
+        date_time_str = date + time.replace(' ', '')
+        dt_start = datetime.strptime(date_time_str, '%y%m%d%H%M%S')
+
+    else:
+        epoch_key = "Epoch of observation (MJD)"
+        mjd = None
+
+        with open(inf_file, 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                if epoch_key in line:
+                    _, value = line.split('=', 1)
+                    mjd = value.strip()
+                    break
+
+        t = Time(mjd, scale='utc', format='mjd')
+
+        # convert to required format
+        input_format = "%Y:%j:%H:%M:%S.%f"
+        dt_start = datetime.strptime(t.yday, input_format)
+
+    # Adjust time if nec
+    if tskip:
+        dt_start += timedelta(seconds=tskip)
+    else: pass
+
+    # Convert to astropy Time object
+    mjd_start = Time(dt_start)
+
+    # Format string
+    time_str = dt_start.strftime(output_format)
+     
+    return mjd_start, time_str
 
 
 def extract_pulses(sp_file):
@@ -302,6 +371,14 @@ def calculate_offsets(off_fname, mjd_start, times_after_start,
 @click.option("--dm", type=float,
               help="Dispersion Measure", 
               required = True)
+@click.option("--tskip", type=int,
+              help="Integer number of seconds to skip after nominal" +\
+                   " scan start time (default = 0)", default=0,  
+              required=False)
+@click.option("--scan", type=int,
+              help="Scan number in scan table (default = -1, just" +\
+                   " grab first line)", default=-1,  
+              required=False)
 @click.option("--source", type=str,
               help="Name of the pulse source", 
               required=True)
@@ -316,7 +393,7 @@ def calculate_offsets(off_fname, mjd_start, times_after_start,
               required=True)
 def vrad_2_cs(inf_file, sp_file, off_file, vrad_dir, vrad_base, 
               out_dir, freq_band, dm, source, telescope, data_amount, 
-              nproc, sp_freq_band=None, srcdir=srcdir):
+              tskip, scan, nproc, sp_freq_band=None, srcdir=srcdir):
     """
     Converts sections of *.vrad files into *.cs files around pulse times.
 
@@ -353,7 +430,8 @@ def vrad_2_cs(inf_file, sp_file, off_file, vrad_dir, vrad_base,
         fs_sp = fs.get_freq_info(sp_freq_band)
 
     # Extract starting time from .inf file
-    mjd_start, start_time = extract_start_time(inf_file)
+    mjd_start, start_time = extract_start_time(inf_file, tskip=tskip, 
+                                               scan=scan)
     times_after_start, bin_widths, snrs = extract_pulses(sp_file)
 
     # Add list of times to start time

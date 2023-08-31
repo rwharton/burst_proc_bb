@@ -136,6 +136,7 @@ def vrad_2_cs(par):
               "vrad_base": par.vrad_base, "out": par.outdir, 
               "freq_dat": par.freq_dat, "freq_sp" : par.freq_sp, 
               "source": par.source, "tele": par.telescope, 
+              "scan" : par.scan, "tskip": par.tskip, 
               "amount": par.data_amount, "dm": par.dm, 
               "src" : srcdir, "off_fn" : par.offset_file}
 
@@ -152,6 +153,7 @@ def vrad_2_cs(par):
            " --vrad_base %(vrad_base)s --out_dir %(out)s" \
            " --freq_band %(freq_dat)s --sp_freq_band %(freq_sp)s" \
            " --nproc %(nproc)d --dm %(dm)f --source %(source)s" \
+           " --scan %(scan)d --tskip %(tskip)d" \
            " --telescope %(tele)s --data_amount %(amount)i" % params
     
     print(cmd)

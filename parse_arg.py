@@ -67,6 +67,8 @@ class Parameters():
         self.freq_sp = self.pval(pd, 'freq_sp', 's')
         self.source = self.pval(pd, 'source', 's')
         self.telescope = self.pval(pd, 'telescope', 's')
+        self.scan  = self.pval(pd, 'scan', 'd')
+        self.tskip = self.pval(pd, 'tskip', 'd')
         self.data_amount = self.pval(pd, 'data_amount', 'f')
 
         # inputs for cs2fil conversion

@@ -38,7 +38,7 @@ sp_dt_us = 10.24
 ############################
 
 # Output directory
-outdir = "/data/frb_pipe/22m285/sband"
+outdir = "/data/frb_pipe/22m295/test"
 
 # Output subdirectories (shouldn't need to change)
 cs_dir = "cs"
@@ -78,6 +78,8 @@ freq_dat = 'sband-1'
 freq_sp  = 'sband-1'
 
 source = "m81" 
+scan   = 1
+tskip  = 0
 telescope = "robledo" 
 data_amount = 3 # in seconds
 
@@ -109,7 +111,7 @@ nwin = 5 # window size
 
 offset_file = "offset_times_sband.txt"
 fil_base  = "s" 
-plt_dt    = 0.001  # plot at this time res in ms
+plt_dt    = 0.1  # plot at this time res in ms
 plt_chans = 100  # plot at most this many chans
 tdur = 0.2       # grab this much data for plot
 
